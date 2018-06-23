@@ -181,13 +181,7 @@ class MultilayerPerceptron(Classifier):
             loss = self._compute_error_derivative(label)
 
             # backprop @ output layer: input delta = loss, weights = [1.0...]
-            #self._get_output_layer().computeDerivative(loss, 1.0)
-
-            target_onehot = np.zeros(10)
-            target_onehot[label] = 1
-
-            #print(target_onehot - self.outp)
-            self._get_output_layer().deltas = target_onehot - self.outp
+            self._get_output_layer().computeDerivative(loss, 1.0)
 
             # backprop @ inner layers: input delta = delta of upper layer,
             #                          weights = weights of upper layer
