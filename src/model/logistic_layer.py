@@ -45,7 +45,7 @@ class LogisticLayer():
         self.activationString = activation
         self.activation = Activation.getActivation(self.activationString)
         self.activationDerivative = Activation.getDerivative(
-                                    self.activationString)
+            self.activationString)
 
         self.nIn = nIn
         self.nOut = nOut
@@ -128,7 +128,7 @@ class LogisticLayer():
         self.deltas = (dado * np.dot(next_derivatives, next_weights))
 
         # Or you can explicitly calculate the derivatives for two cases
-        # Page 40 Back-propagation slides
+        # Page 40 Back-wropagation slides
         # if self.isClassifierLayer:
         #     self.deltas = (next_derivatives - self.outp) * self.outp * \
         #                   (1 - self.outp)
@@ -143,13 +143,11 @@ class LogisticLayer():
         """
         Update the weights of the layer
         """
-
         # weight updating as gradient descent principle
         for neuron in range(0, self.nOut):
             self.weights[:, neuron] -= (learningRate *
                                         self.deltas[neuron] *
                                         self.inp)
-        
 
     def _fire(self, inp):
         return self.activation(np.dot(inp, self.weights))

@@ -4,6 +4,7 @@
 Activation functions which can be used within neurons.
 """
 
+import numpy as np
 from numpy import exp
 from numpy import divide
 from numpy import ones
@@ -22,7 +23,7 @@ class Activation:
     @staticmethod
     def sigmoid(netOutput):
         # use e^x from numpy to avoid overflow
-        return 1/(1+exp(-1.0*netOutput))
+        return 1.0/(1.0+exp(-1.0*netOutput))
 
     @staticmethod
     def sigmoidPrime(netOutput):
@@ -49,8 +50,8 @@ class Activation:
     @staticmethod
     def rectifiedPrime(netOutput):
         # reluPrime=1 if netOutput > 0 otherwise 0
-        #print(type(netOutput))
-        return netOutput>0
+        # print(type(netOutput))
+        return netOutput > 0
 
     @staticmethod
     def identity(netOutput):
@@ -64,13 +65,15 @@ class Activation:
     @staticmethod
     def softmax(netOutput):
         # Here you have to code the softmax function
-        pass
-        
+        e = np.exp(netOutput)
+        s = np.sum(e)
+        return e / s
+
     @staticmethod
     def softmaxPrime(netOutput):
         # Here you have to code the softmax function
-        pass
-        
+        return netOutput * (1.0 - netOutput)
+
     @staticmethod
     def getActivation(str):
         """
