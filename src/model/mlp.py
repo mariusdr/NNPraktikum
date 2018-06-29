@@ -13,7 +13,7 @@ class MultilayerPerceptron(Classifier):
 
     def __init__(self, train, valid, test, layers=None, inputWeights=None,
                  outputTask='classification', outputActivation='softmax',
-                 loss='bce', learningRate=0.08, epochs=50):
+                 loss='bce', learningRate=0.05, epochs=50):
         """
         A MNIST recognizer based on multi-layer perceptron algorithm
 
@@ -130,14 +130,10 @@ class MultilayerPerceptron(Classifier):
         ndarray :
             a numpy array (1,nOut) containing the output of the layer
         """
-        target_onehot = np.zeros(10)
-        target_onehot[target - 1] = 1
-        return self.loss.calculateError(target_onehot, self.outp)
+        return self.loss.calculateError(target, self.outp)
 
     def _compute_error_derivative(self, target):
-        target_onehot = np.zeros(10)
-        target_onehot[target - 1] = 1
-        return self.loss.calculateDerivative(target_onehot, self.outp)
+        return self.loss.calculateDerivative(target, self.outp)
 
     def train(self, verbose=True):
         """Train the Multi-layer Perceptrons
@@ -162,23 +158,13 @@ class MultilayerPerceptron(Classifier):
                     accuracy * 100))
                 print("-----------------------------")
 
-            print("DEBUG =============================")
-            for layer in self.layers:
-                i = self.layers.index(layer)
-                print("Layer {0}: max weight: {1}".format(
-                    i, np.max(layer.weights)))
-                print("Layer {0}: avg weight: {1}".format(
-                    i, np.average(layer.weights)))
-                print("Layer {0}: min weight: {1}".format(
-                    i, np.min(layer.weights)))
-                print("Layer {0}: gradient magnitude: {1}".format(
-                    i, np.linalg.norm(layer.deltas)))
-            print("===================================")
-
     def _train_one_epoch(self):
         for inp, label in zip(self.trainingSet.input, self.trainingSet.label):
             self._feed_forward(inp)
-            loss = self._compute_error_derivative(label)
+
+            target_onehot = np.zeros(10)
+            target_onehot[label] = 1
+            loss = self._compute_error_derivative(target_onehot)
 
             # backprop @ output layer: input delta = loss, weights = [1.0...]
             self._get_output_layer().computeDerivative(loss, 1.0)

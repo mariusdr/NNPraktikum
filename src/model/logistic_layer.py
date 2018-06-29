@@ -111,7 +111,7 @@ class LogisticLayer():
         # Here the implementation of partial derivative calculation
 
         # In case of the output layer, next_weights is array of 1
-        # and next_derivatives - the derivative of the error will be the errors
+        # and next_derivatives self.outp- the derivative of the error will be the errors
         # Please see the call of this method in LogisticRegression.
         # self.deltas = (self.outp *
         #              (1 - self.outp) *
