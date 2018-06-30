@@ -1,5 +1,4 @@
 import time
-
 import numpy as np
 
 from util.activation_functions import Activation
@@ -39,7 +38,9 @@ class LogisticLayer():
     """
 
     def __init__(self, nIn, nOut, weights=None,
-                 activation='sigmoid', isClassifierLayer=False):
+                 activation='sigmoid', isClassifierLayer=False,
+                 use_weight_decay=False,
+                 weight_decay_rate=0.005):
 
         # Get activation function from string
         self.activationString = activation
@@ -64,6 +65,8 @@ class LogisticLayer():
             self.weights = weights
 
         self.isClassifierLayer = isClassifierLayer
+        self.use_weight_decay = use_weight_decay
+        self.weight_decay_rate = weight_decay_rate
 
         # Some handy properties of the layers
         self.size = self.nOut
@@ -145,9 +148,15 @@ class LogisticLayer():
         """
         # weight updating as gradient descent principle
         for neuron in range(0, self.nOut):
-            self.weights[:, neuron] -= (learningRate *
-                                        self.deltas[neuron] *
-                                        self.inp)
+            if self.use_weight_decay:
+                self.weights[:, neuron] -= self.weight_decay_rate * \
+                    self.weights[:, neuron]
+
+            gradient = learningRate * self.deltas[neuron] * self.inp
+            self.weights[:, neuron] -= gradient
 
     def _fire(self, inp):
         return self.activation(np.dot(inp, self.weights))
+
+    def __str__(self):
+        return "LogisticLayer(nIn: {}, nOut: {}, activation: {})".format(self.nIn, self.nOut, self.activationString)
