@@ -127,7 +127,7 @@ class CrossEntropyError(Error):
         self.errorString = 'crossentropy'
 
     def calculateError(self, target, output):
-        pass
+        return -np.sum(target*np.log(output) + (1.0-target)*np.log(1.0-output))
 
     def calculateDerivativer(self, target, output):
-        pass
+        return -target/output + (1.0-target)/(1.0-output)
